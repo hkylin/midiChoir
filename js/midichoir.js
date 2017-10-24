@@ -84,11 +84,18 @@ function loadMusic() {
         muteBut.appendChild(muteButText);
         htmlMuteButtonsDiv.appendChild(muteBut);
     }
+    // Ajout de l'aide sur les boutons
+    $("#btnForce0").attr("data-intro", "Isoler la voix");
+    $("#btnForce0").attr("data-position", "left");
+    $("#btnMute0").attr("data-intro", "Couper la voix");
+    $("#btnMute0").attr("data-position", "left");
     //
     bookmarkTime = 0;
     setAllVol();
     $("#bookmark").css({"visibility": "hidden"});
     $("#tempoSlideDiv").css({"visibility": "visible"});
+    $("#tempoLabel").attr("data-intro", "Ajustement du tempo");
+    $("#tempoLabel").attr("data-position", "left");
     MIDI.Player.loadFile("../mid/" + filename, MIDI.Player.start);
     MIDIPlayerPercentage(MIDI.Player);
     var d = document.getElementById("pausePlayStop");
@@ -187,18 +194,20 @@ function setAllVol() {
             if (forceSATB[i] === 1) {
                 MIDI.setVolume(i, 127);
             } else {
-                MIDI.setVolume(i, 0);
+                MIDI.setVolume(i, 20);
             }
         }
     }
-    // si pas de bleu : on laisse tout sauf les rouges
+    // si pas de bleu : tout au max
     else {
         for (i = 0; i < channels.length; i++) {
-            if (muteSATB[i] === 1) {
-                MIDI.setVolume(i, 0);
-            } else {
-                MIDI.setVolume(i, 127);
-            }
+            MIDI.setVolume(i, 127);
+        }
+    }
+    // On coupe les rouges
+    for (i = 0; i < channels.length; i++) {
+        if (muteSATB[i] === 1) {
+            MIDI.setVolume(i, 0);
         }
     }
 }
